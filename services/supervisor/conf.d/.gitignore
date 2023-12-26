@@ -1,0 +1,6 @@
+*
+!.gitignore
+!php-cli.ini
+!php56-cli.ini
+!php-fpm.ini
+!php56-fpm.ini

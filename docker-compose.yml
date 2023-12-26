@@ -43,7 +43,7 @@ services:
       - ${PHP56_LOG_DIR}:/var/log/php
       - ${DATA_DIR}/composer:/tmp/composer
       - ${SUPERVISOR_LOG}:/var/log/supervisor/:rw
-      - ${SUPERVISOR_CONFIG}php-fpm56.ini:/etc/supervisor/conf.d/php-fpm56.ini:rw
+      - ${SUPERVISOR_CONFIG}php56-fpm.ini:/etc/supervisor/conf.d/php-fpm.ini:rw
       - ${SUPERVISOR_CONF_FILE}:/etc/supervisor/supervisord.conf:ro
     restart: always
     command:
@@ -65,13 +65,18 @@ services:
         PHP_EXTENSIONS: ${PHP56_EXTENSIONS}
         TZ: ${TZ}
     container_name: php56_cli
+    deploy:
+        resources:
+            limits:
+                cpus: '0.50'
+                memory: 512M
     volumes:
       - ${SOURCE_DIR}:/www/:rw
       - ${PHP56_PHP_CONF_FILE}:/usr/local/etc/php/php.ini:ro
       - ${PHP56_LOG_DIR}:/var/log/php
       - ${DATA_DIR}/composer:/tmp/composer
       - ${SUPERVISOR_LOG}:/var/log/supervisor/:rw
-      - ${SUPERVISOR_CONFIG}php-cli56.ini:/etc/supervisor/conf.d/php-cli56.ini:rw
+      - ${SUPERVISOR_CONFIG}php56-cli.ini:/etc/supervisor/conf.d/php-cli.ini:rw
       - ${SUPERVISOR_CONF_FILE}:/etc/supervisor/supervisord.conf:ro
     restart: always
     command:
@@ -125,6 +130,11 @@ services:
         PHP_EXTENSIONS: ${PHP_EXTENSIONS}
         TZ: ${TZ}
     container_name: php_cli
+    deploy:
+        resources:
+            limits:
+                cpus: '0.50'
+                memory: 512M
     volumes:
       - ${SOURCE_DIR}:/www/:rw
       - ${PHP_PHP_CACERT_DIR}:/usr/local/etc/php/cacert

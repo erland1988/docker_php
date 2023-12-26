@@ -1,4 +1,5 @@
 .idea
 .DS_Store
 .env
+docker-compose.yml
 nohup.out
