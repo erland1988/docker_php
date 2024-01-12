@@ -180,6 +180,7 @@ services:
     container_name: tkerland_memcached
     ports:
       - "${MEMCACHED_HOST_PORT}:11211"
+    restart: always
     environment:
        MEMCACHED_CACHE_SIZE: "${MEMCACHED_CACHE_SIZE}"
     networks:
