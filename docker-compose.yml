@@ -155,6 +155,20 @@ services:
     networks:
       - default
 
+  golang:
+    build:
+      context: ./services/golang
+    container_name: golang
+    ports:
+      - "${GOLANG_HOST_PORT}:8088"
+    volumes:
+      - ${SOURCE_DIR}/go:/go:rw
+    networks:
+      - default
+    environment:
+      TZ: ${TZ}
+    tty: true
+
   mysql:
     image: mysql:${MYSQL_VERSION}
     container_name: mysql
@@ -189,7 +203,8 @@ services:
     image: memcached:${MEMCACHED_VERSION}
     container_name: memcached
     ports:
-      - "${MEMCACHED_HOST_PORT}:11211"
+      - "${MEMCACHED_HOST_PORT}:11211"      
+    restart: always
     environment:
        MEMCACHED_CACHE_SIZE: "${MEMCACHED_CACHE_SIZE}"
     networks:

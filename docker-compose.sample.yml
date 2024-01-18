@@ -7,7 +7,7 @@ services:
         NGINX_VERSION: nginx:${NGINX_VERSION}
         CONTAINER_PACKAGE_URL: ${CONTAINER_PACKAGE_URL}
         NGINX_INSTALL_APPS: ${NGINX_INSTALL_APPS}
-    container_name: tkerland_nginx
+    container_name: nginx
     ports:
       - "${NGINX_HTTP_HOST_PORT}:80"
       - "${NGINX_HTTPS_HOST_PORT}:443"
@@ -33,7 +33,7 @@ services:
         CONTAINER_PACKAGE_URL: ${CONTAINER_PACKAGE_URL}
         PHP_EXTENSIONS: ${PHP56_EXTENSIONS}
         TZ: ${TZ}
-    container_name: tkerland_php56
+    container_name: php56
     expose:
       - 9000
     volumes:
@@ -43,7 +43,7 @@ services:
       - ${PHP56_LOG_DIR}:/var/log/php
       - ${DATA_DIR}/composer:/tmp/composer
       - ${SUPERVISOR_LOG}:/var/log/supervisor/:rw
-      - ${SUPERVISOR_CONFIG}php-fpm56.ini:/etc/supervisor/conf.d/php-fpm56.ini:rw
+      - ${SUPERVISOR_CONFIG}php56-fpm.ini:/etc/supervisor/conf.d/php-fpm.ini:rw
       - ${SUPERVISOR_CONF_FILE}:/etc/supervisor/supervisord.conf:ro
     restart: always
     command:
@@ -64,14 +64,19 @@ services:
         CONTAINER_PACKAGE_URL: ${CONTAINER_PACKAGE_URL}
         PHP_EXTENSIONS: ${PHP56_EXTENSIONS}
         TZ: ${TZ}
-    container_name: tkerland_php56_cli
+    container_name: php56_cli
+    deploy:
+        resources:
+            limits:
+                cpus: '0.50'
+                memory: 512M
     volumes:
       - ${SOURCE_DIR}:/www/:rw
       - ${PHP56_PHP_CONF_FILE}:/usr/local/etc/php/php.ini:ro
       - ${PHP56_LOG_DIR}:/var/log/php
       - ${DATA_DIR}/composer:/tmp/composer
       - ${SUPERVISOR_LOG}:/var/log/supervisor/:rw
-      - ${SUPERVISOR_CONFIG}php-cli56.ini:/etc/supervisor/conf.d/php-cli56.ini:rw
+      - ${SUPERVISOR_CONFIG}php56-cli.ini:/etc/supervisor/conf.d/php-cli.ini:rw
       - ${SUPERVISOR_CONF_FILE}:/etc/supervisor/supervisord.conf:ro
     restart: always
     command:
@@ -92,7 +97,7 @@ services:
         CONTAINER_PACKAGE_URL: ${CONTAINER_PACKAGE_URL}
         PHP_EXTENSIONS: ${PHP_EXTENSIONS}
         TZ: ${TZ}
-    container_name: tkerland_php
+    container_name: php
     expose:
       - 9000
     volumes:
@@ -124,7 +129,12 @@ services:
         CONTAINER_PACKAGE_URL: ${CONTAINER_PACKAGE_URL}
         PHP_EXTENSIONS: ${PHP_EXTENSIONS}
         TZ: ${TZ}
-    container_name: tkerland_php_cli
+    container_name: php_cli
+    deploy:
+        resources:
+            limits:
+                cpus: '0.50'
+                memory: 512M
     volumes:
       - ${SOURCE_DIR}:/www/:rw
       - ${PHP_PHP_CACERT_DIR}:/usr/local/etc/php/cacert
@@ -145,9 +155,22 @@ services:
     networks:
       - default
 
+  golang:
+    build:
+      context: ./services/golang
+    ports:
+      - "${GOLANG_HOST_PORT}:8088"
+    volumes:
+      - ${SOURCE_DIR}:/go:rw
+    networks:
+      - default
+    environment:
+      TZ: ${TZ}
+    tty: true
+
   mysql:
     image: mysql:${MYSQL_VERSION}
-    container_name: tkerland_mysql
+    container_name: mysql
     ports:
       - "${MYSQL_HOST_PORT}:3306"
     volumes:
@@ -162,7 +185,7 @@ services:
 
   redis:
     image: redis:${REDIS_VERSION}
-    container_name: tkerland_redis
+    container_name: redis
     ports:
       - "${REDIS_HOST_PORT}:6379"
     volumes:
@@ -177,9 +200,10 @@ services:
 
   memcached:
     image: memcached:${MEMCACHED_VERSION}
-    container_name: tkerland_memcached
+    container_name: memcached
     ports:
       - "${MEMCACHED_HOST_PORT}:11211"
+    restart: always
     environment:
        MEMCACHED_CACHE_SIZE: "${MEMCACHED_CACHE_SIZE}"
     networks:
