@@ -203,7 +203,8 @@ services:
     image: memcached:${MEMCACHED_VERSION}
     container_name: memcached
     ports:
-      - "${MEMCACHED_HOST_PORT}:11211"      
+      - "${MEMCACHED_HOST_PORT}:11211"
+      - "${MEMCACHED_HOST_PORT}:11211"
     restart: always
     environment:
        MEMCACHED_CACHE_SIZE: "${MEMCACHED_CACHE_SIZE}"
