@@ -43,7 +43,7 @@ services:
       - ${PHP56_LOG_DIR}:/var/log/php
       - ${DATA_DIR}/composer:/tmp/composer
       - ${SUPERVISOR_LOG}:/var/log/supervisor/:rw
-      - ${SUPERVISOR_CONFIG}php56-fpm.ini:/etc/supervisor/conf.d/php-fpm.ini:rw
+      - ${SUPERVISOR_CONFIG}php56-fpm.ini:/etc/supervisor/conf.d/php-fpm.sample.ini:rw
       - ${SUPERVISOR_CONF_FILE}:/etc/supervisor/supervisord.conf:ro
     restart: always
     command:
@@ -76,7 +76,7 @@ services:
       - ${PHP56_LOG_DIR}:/var/log/php
       - ${DATA_DIR}/composer:/tmp/composer
       - ${SUPERVISOR_LOG}:/var/log/supervisor/:rw
-      - ${SUPERVISOR_CONFIG}php56-cli.ini:/etc/supervisor/conf.d/php-cli.ini:rw
+      - ${SUPERVISOR_CONFIG}php56-cli.ini:/etc/supervisor/conf.d/php-cli.sample.ini:rw
       - ${SUPERVISOR_CONF_FILE}:/etc/supervisor/supervisord.conf:ro
     restart: always
     command:
@@ -108,7 +108,7 @@ services:
       - ${PHP_LOG_DIR}:/var/log/php
       - ${DATA_DIR}/composer:/tmp/composer
       - ${SUPERVISOR_LOG}:/var/log/supervisor/:rw
-      - ${SUPERVISOR_CONFIG}php-fpm.ini:/etc/supervisor/conf.d/php-fpm.ini:rw
+      - ${SUPERVISOR_CONFIG}php-fpm.ini:/etc/supervisor/conf.d/php-fpm.sample.ini:rw
       - ${SUPERVISOR_CONF_FILE}:/etc/supervisor/supervisord.conf:ro
     restart: always
     command:
@@ -142,7 +142,7 @@ services:
       - ${PHP_LOG_DIR}:/var/log/php
       - ${DATA_DIR}/composer:/tmp/composer
       - ${SUPERVISOR_LOG}:/var/log/supervisor/:rw
-      - ${SUPERVISOR_CONFIG}php-cli.ini:/etc/supervisor/conf.d/php-cli.ini:rw
+      - ${SUPERVISOR_CONFIG}php-cli.ini:/etc/supervisor/conf.d/php-cli.sample.ini:rw
       - ${SUPERVISOR_CONF_FILE}:/etc/supervisor/supervisord.conf:ro
     restart: always
     command:
