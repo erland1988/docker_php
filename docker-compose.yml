@@ -162,7 +162,7 @@ services:
     ports:
       - "${GOLANG_HOST_PORT}:8088"
     volumes:
-      - ${SOURCE_DIR}/go:/go:rw
+      - ${SOURCE_DIR}:/www/:rw
     networks:
       - default
     environment:
