@@ -12,7 +12,6 @@ services:
       - "${NGINX_HTTP_HOST_PORT}:80"
       - "${NGINX_HTTPS_HOST_PORT}:443"
     volumes:
-      - ${SOURCE_DIR}:/www/:rw
       - ${NGINX_SSL_CERTIFICATE_DIR}:/ssl:rw
       - ${NGINX_CONFD_DIR}:/etc/nginx/conf.d/:rw
       - ${NGINX_CONF_FILE}:/etc/nginx/nginx.conf:ro
@@ -37,7 +36,7 @@ services:
     expose:
       - 9000
     volumes:
-      - ${SOURCE_DIR}:/www/:rw
+      - ${SOURCE_DIR}/git/php56:/www/:rw
       - ${PHP56_PHP_CONF_FILE}:/usr/local/etc/php/php.ini:ro
       - ${PHP56_FPM_CONF_FILE}:/usr/local/etc/php-fpm.d/www.conf:rw
       - ${PHP56_LOG_DIR}:/var/log/php
@@ -71,7 +70,7 @@ services:
                 cpus: '0.50'
                 memory: 512M
     volumes:
-      - ${SOURCE_DIR}:/www/:rw
+      - ${SOURCE_DIR}\git\php56:/www/:rw
       - ${PHP56_PHP_CONF_FILE}:/usr/local/etc/php/php.ini:ro
       - ${PHP56_LOG_DIR}:/var/log/php
       - ${DATA_DIR}/composer:/tmp/composer
@@ -101,7 +100,7 @@ services:
     expose:
       - 9000
     volumes:
-      - ${SOURCE_DIR}:/www/:rw
+      - ${SOURCE_DIR}\git\php7:/www/:rw
       - ${PHP_PHP_CACERT_DIR}:/usr/local/etc/php/cacert
       - ${PHP_PHP_CONF_FILE}:/usr/local/etc/php/php.ini:ro
       - ${PHP_FPM_CONF_FILE}:/usr/local/etc/php-fpm.d/www.conf:rw
@@ -136,7 +135,7 @@ services:
                 cpus: '0.50'
                 memory: 512M
     volumes:
-      - ${SOURCE_DIR}:/www/:rw
+      - ${SOURCE_DIR}\git\php7:/www/:rw
       - ${PHP_PHP_CACERT_DIR}:/usr/local/etc/php/cacert
       - ${PHP_PHP_CONF_FILE}:/usr/local/etc/php/php.ini:ro
       - ${PHP_LOG_DIR}:/var/log/php
@@ -159,15 +158,27 @@ services:
     build:
       context: ./services/golang
     container_name: golang
-    ports:
-      - "${GOLANG_HOST_PORT}:8088"
+    expose:
+      - 8080
     volumes:
-      - ${SOURCE_DIR}:/www/:rw
+      - ${SOURCE_DIR}\git\golang:/www/:rw
     networks:
       - default
     environment:
       TZ: ${TZ}
     tty: true
+
+  nodejs:
+    build:
+      context: ./services/nodejs
+    container_name: nodejs
+    expose:
+      - 8080
+    volumes:
+      - ${SOURCE_DIR}\git\nodejs:/www/:rw
+    command: tail -f /dev/null
+    networks:
+      - default
 
   mysql:
     image: mysql:${MYSQL_VERSION}
