@@ -57,39 +57,6 @@ services:
     networks:
       - default
 
-  php56_cli:
-    build:
-      context: ./services/php
-      args:
-        PHP_VERSION: php:${PHP56_VERSION}-fpm-alpine
-        CONTAINER_PACKAGE_URL: ${CONTAINER_PACKAGE_URL}
-        PHP_EXTENSIONS: ${PHP56_EXTENSIONS}
-        TZ: ${TZ}
-    container_name: php56_cli
-    deploy:
-        resources:
-            limits:
-                cpus: '0.50'
-                memory: 512M
-    volumes:
-      - ${SOURCE_DIR}\git\php56:/www/php56/:rw
-      - ${PHP56_PHP_CONF_FILE}:/usr/local/etc/php/php.ini:ro
-      - ${PHP56_LOG_DIR}:/var/log/php
-      - ${DATA_DIR}/composer:/tmp/composer
-      - ${SUPERVISOR_LOG}:/var/log/supervisor/:rw
-      - ${SUPERVISOR_CONFIG}php56-cli.ini:/etc/supervisor/conf.d/php-cli.ini:rw
-      - ${SUPERVISOR_CONF_FILE}:/etc/supervisor/supervisord.conf:ro
-    restart: always
-    command:
-     - /bin/sh
-     - -c
-     - |
-        supervisord -n -c /etc/supervisor/supervisord.conf
-    cap_add:
-      - SYS_PTRACE
-    networks:
-      - default
-
   php:
     build:
       context: ./services/php
@@ -101,6 +68,8 @@ services:
     container_name: php
     expose:
       - 9000
+    expose:
+      - "9003:9003"
     volumes:
       - ${SOURCE_DIR}\git\php7:/www/php7/:rw
       - ${PHP_PHP_CACERT_DIR}:/usr/local/etc/php/cacert
@@ -119,66 +88,6 @@ services:
         supervisord -n -c /etc/supervisor/supervisord.conf
     cap_add:
       - SYS_PTRACE
-    networks:
-      - default
-
-  php_cli:
-    build:
-      context: ./services/php
-      args:
-        PHP_VERSION: php:${PHP_VERSION}-fpm-alpine
-        CONTAINER_PACKAGE_URL: ${CONTAINER_PACKAGE_URL}
-        PHP_EXTENSIONS: ${PHP_EXTENSIONS}
-        TZ: ${TZ}
-    container_name: php_cli
-    deploy:
-        resources:
-            limits:
-                cpus: '0.50'
-                memory: 512M
-    volumes:
-      - ${SOURCE_DIR}\git\php7:/www/php7/:rw
-      - ${PHP_PHP_CACERT_DIR}:/usr/local/etc/php/cacert
-      - ${PHP_PHP_CONF_FILE}:/usr/local/etc/php/php.ini:ro
-      - ${PHP_LOG_DIR}:/var/log/php
-      - ${DATA_DIR}/composer:/tmp/composer
-      - ${SUPERVISOR_LOG}:/var/log/supervisor/:rw
-      - ${SUPERVISOR_CONFIG}php-cli.ini:/etc/supervisor/conf.d/php-cli.ini:rw
-      - ${SUPERVISOR_CONF_FILE}:/etc/supervisor/supervisord.conf:ro
-    restart: always
-    command:
-     - /bin/sh
-     - -c
-     - |
-        supervisord -n -c /etc/supervisor/supervisord.conf
-    cap_add:
-      - SYS_PTRACE
-    networks:
-      - default
-
-  golang:
-    build:
-      context: ./services/golang
-    container_name: golang
-    expose:
-      - 8080
-    volumes:
-      - ${SOURCE_DIR}\git\golang:/www/:rw
-    networks:
-      - default
-    environment:
-      TZ: ${TZ}
-    tty: true
-
-  nodejs:
-    build:
-      context: ./services/nodejs
-    container_name: nodejs
-    expose:
-      - 8080
-    volumes:
-      - ${SOURCE_DIR}\git\nodejs:/www/:rw
-    command: tail -f /dev/null
     networks:
       - default
 
